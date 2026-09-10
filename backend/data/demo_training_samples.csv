@@ -1,0 +1,25 @@
+kind,content,label,category,source,review_status
+message,"HMRC tax refund requires your bank details immediately [url:hmrc-refund.example]",potentially_suspicious,government_impersonation,demo_only,approved
+message,"Royal Mail delivery fee is overdue pay now [url:parcel-fee.example]",potentially_suspicious,delivery_scam,demo_only,approved
+message,"Your bank account is suspended verify your password urgently",potentially_suspicious,bank_impersonation,demo_only,approved
+message,"Guaranteed cryptocurrency returns join today before spaces close",potentially_suspicious,investment_scam,demo_only,approved
+message,"DVLA fine outstanding confirm your card payment today",potentially_suspicious,government_impersonation,demo_only,approved
+message,"Microsoft support detected a virus call now to secure your computer",potentially_suspicious,tech_support,demo_only,approved
+message,"Hello your dental appointment is confirmed for Tuesday at ten",lower_risk,unknown,demo_only,approved
+message,"Your library book is due next week please renew online through the library website",lower_risk,unknown,demo_only,approved
+message,"Meeting moved to three oclock tomorrow see the calendar invite",lower_risk,unknown,demo_only,approved
+message,"Your order has been dispatched and will arrive on the selected date",lower_risk,unknown,demo_only,approved
+message,"Thank you for your payment receipt is attached to your account",lower_risk,unknown,demo_only,approved
+message,"Mum I will be home after work please save dinner for me",lower_risk,unknown,demo_only,approved
+url,"http://secure-bank-login.example.com/verify",potentially_suspicious,phishing,demo_only,approved
+url,"http://hmrc-tax-refund.example.co.uk/claim",potentially_suspicious,government_impersonation,demo_only,approved
+url,"http://192.168.10.5/login",potentially_suspicious,phishing,demo_only,approved
+url,"https://paypal-account-confirm-login.example.net/update",potentially_suspicious,phishing,demo_only,approved
+url,"http://tinyurl.com/demo-claim",potentially_suspicious,phishing,demo_only,approved
+url,"https://secure-delivery-fee-pay.example.co.uk/account",potentially_suspicious,delivery_scam,demo_only,approved
+url,"https://www.example.org/about",lower_risk,unknown,demo_only,approved
+url,"https://www.bbc.co.uk/news",lower_risk,unknown,demo_only,approved
+url,"https://www.gov.uk/services",lower_risk,unknown,demo_only,approved
+url,"https://www.nhs.uk/conditions",lower_risk,unknown,demo_only,approved
+url,"https://www.openstreetmap.org",lower_risk,unknown,demo_only,approved
+url,"https://www.university.ac.uk/library",lower_risk,unknown,demo_only,approved
