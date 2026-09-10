@@ -146,6 +146,18 @@ filesystem and are not a reliable scheduler or model-artifact store.
 Do not add any Firebase Admin service-account key or database password to
 Vercel. Those belong only in Cloud Run secrets.
 
+## Vercel free frontend + API deployment
+
+The same Vercel project can run the request-time FastAPI analysis API via
+`api/index.py`. Its rewrite routes `/api/v1/**` to that function, so the React
+client uses the existing relative `/api/v1` address and no `VITE_API_URL` is
+needed. The function uses `/tmp` for its ephemeral SQL audit store and disables
+automatic training. Firebase remains the source for user accounts and browser
+history.
+
+This option is suitable for a free demo of message and URL analysis. Use Cloud
+Run plus Cloud Storage for durable API storage and automatic model training.
+
 ## Render free API deployment
 
 For a free demonstration backend, the repository includes `render.yaml`. In
