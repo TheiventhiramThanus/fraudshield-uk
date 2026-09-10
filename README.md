@@ -145,3 +145,19 @@ filesystem and are not a reliable scheduler or model-artifact store.
 
 Do not add any Firebase Admin service-account key or database password to
 Vercel. Those belong only in Cloud Run secrets.
+
+## Render free API deployment
+
+For a free demonstration backend, the repository includes `render.yaml`. In
+Render, create a **Blueprint** from this repository and choose the `main`
+branch. It deploys `backend/Dockerfile` as the `fraudshield-api` web service,
+uses the free plan, and permits requests from the production Vercel site.
+
+After Render provides the public service address, set Vercel's `VITE_API_URL`
+to that address followed by `/api/v1`, then redeploy the Vercel frontend. For
+example: `https://fraudshield-api.onrender.com/api/v1`.
+
+The Render free tier can sleep after inactivity and its local filesystem is
+ephemeral. It is suitable for demonstrating analysis requests, but not for
+reliable automatic model training or durable SQL history. Use Cloud Run plus
+Cloud Storage for those production features.

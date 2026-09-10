@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: fraudshield-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: main
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: ALLOWED_ORIGINS
+        value: https://fraudshield-drab.vercel.app
+      - key: AUTO_TRAINING_ENABLED
+        value: "false"
