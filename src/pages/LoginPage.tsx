@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../lib/firebase";
+import { auth, isFirebaseConfigured } from "../lib/firebase";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -11,6 +11,10 @@ export default function LoginPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!isFirebaseConfigured) {
+      setError("Sign-in is temporarily unavailable because the hosted Firebase configuration has not been completed.");
+      return;
+    }
     setLoading(true);
     setError("");
     try {
@@ -38,6 +42,7 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+          {!isFirebaseConfigured && <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">The hosted site is being configured. Public pages are available, but sign-in will be enabled shortly.</div>}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="login-email" className="block text-sm font-semibold text-[#0d1b3e] mb-1">Email</label>

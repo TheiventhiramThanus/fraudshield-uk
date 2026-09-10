@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { auth, db } from "../lib/firebase";
+import { auth, db, isFirebaseConfigured } from "../lib/firebase";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
@@ -12,6 +12,7 @@ export default function RegisterPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!isFirebaseConfigured) { setError("Account creation is temporarily unavailable because the hosted Firebase configuration has not been completed."); return; }
     if (form.password !== form.confirm) { setError("Passwords do not match."); return; }
     if (form.password.length < 8) { setError("Use at least 8 characters for your password."); return; }
     setLoading(true);
@@ -50,6 +51,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+          {!isFirebaseConfigured && <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">The hosted site is being configured. Public pages are available, but registration will be enabled shortly.</div>}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="register-name" className="block text-sm font-semibold text-[#0d1b3e] mb-1">Full Name</label>

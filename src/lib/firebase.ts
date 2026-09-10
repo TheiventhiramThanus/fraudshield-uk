@@ -12,11 +12,26 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
-  throw new Error("Firebase configuration is missing. Add VITE_FIREBASE_* values to .env.local.");
-}
+export const isFirebaseConfigured = Boolean(
+  firebaseConfig.apiKey &&
+  firebaseConfig.authDomain &&
+  firebaseConfig.projectId &&
+  firebaseConfig.appId,
+);
 
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+// Keep public pages available if a host has not been configured yet. Firebase
+// operations are then disabled by the callers instead of crashing the entire
+// React application during module initialisation.
+const fallbackConfig = {
+  apiKey: "deployment-configuration-required",
+  authDomain: "deployment-configuration-required.firebaseapp.com",
+  projectId: "deployment-configuration-required",
+  storageBucket: "deployment-configuration-required.appspot.com",
+  messagingSenderId: "000000000000",
+  appId: "1:000000000000:web:deployment-configuration-required",
+};
+
+const app = getApps().length ? getApp() : initializeApp(isFirebaseConfigured ? firebaseConfig : fallbackConfig);
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);

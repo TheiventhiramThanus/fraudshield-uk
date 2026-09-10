@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { onAuthStateChanged, signOut, type User } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../lib/firebase";
+import { auth, db, isFirebaseConfigured } from "../lib/firebase";
 
 export type AppRole = "user" | "admin";
 
@@ -19,30 +19,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [role, setRole] = useState<AppRole | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => onAuthStateChanged(auth, async (nextUser) => {
-    setUser(nextUser);
-    if (!nextUser) {
-      setRole(null);
+  useEffect(() => {
+    if (!isFirebaseConfigured) {
       setLoading(false);
       return;
     }
 
-    try {
-      const profile = await getDoc(doc(db, "profiles", nextUser.uid));
-      setRole(profile.data()?.role === "admin" ? "admin" : "user");
-    } catch {
-      // The account can sign in even when its Firestore profile has not yet been created.
-      setRole("user");
-    } finally {
-      setLoading(false);
-    }
-  }), []);
+    return onAuthStateChanged(auth, async (nextUser) => {
+      setUser(nextUser);
+      if (!nextUser) {
+        setRole(null);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const profile = await getDoc(doc(db, "profiles", nextUser.uid));
+        setRole(profile.data()?.role === "admin" ? "admin" : "user");
+      } catch {
+        // The account can sign in even when its Firestore profile has not yet been created.
+        setRole("user");
+      } finally {
+        setLoading(false);
+      }
+    });
+  }, []);
 
   const value = useMemo(() => ({
     user,
     role,
     loading,
-    signOutUser: () => signOut(auth),
+    signOutUser: () => isFirebaseConfigured ? signOut(auth) : Promise.resolve(),
   }), [user, role, loading]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
