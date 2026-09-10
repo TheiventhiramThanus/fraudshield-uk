@@ -8,7 +8,10 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-import joblib
+try:
+    import joblib
+except ImportError:
+    joblib = None
 
 
 MODEL_DIRECTORY = Path(__file__).resolve().parents[1] / "models"
@@ -44,7 +47,7 @@ def _entropy(value: str) -> float:
 
 
 def load_model(path: Path) -> dict[str, Any] | None:
-    if not path.exists():
+    if joblib is None or not path.exists():
         return None
     bundle = joblib.load(path)
     if not isinstance(bundle, dict) or "model" not in bundle:

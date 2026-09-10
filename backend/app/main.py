@@ -18,14 +18,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from sqlalchemy import JSON, Boolean, DateTime, Integer, String, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
-import pandas as pd
+try:
+    import pandas as pd
+except ImportError:
+    pd = None
 
-from app.auto_training import AutoTrainingService
 from app.ml import MESSAGE_MODEL_PATH, URL_MODEL_PATH, load_model, suspicious_probability, url_features
 from app.model_store import restore_live_models
 
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./fraudshield.db")
+SERVERLESS_RUNTIME = os.getenv("FRAUDSHIELD_SERVERLESS", "").strip().lower() in {"1", "true", "yes", "on"}
 ALLOWED_ORIGINS = os.getenv(
     "ALLOWED_ORIGINS", "http://127.0.0.1:8443,http://localhost:8443"
 ).split(",")
@@ -71,7 +74,19 @@ def reload_live_models() -> None:
     URL_MODEL = load_model(URL_MODEL_PATH)
 
 
-AUTO_TRAINER = AutoTrainingService(reload_live_models)
+if SERVERLESS_RUNTIME:
+    AUTO_TRAINER = None
+    SERVERLESS_TRAINING_STATUS: dict[str, Any] = {
+        "enabled": False,
+        "state": "disabled",
+        "message": "Automatic training is unavailable in the request-scoped Vercel Function.",
+        "lastRunAt": None,
+        "reports": [],
+    }
+else:
+    from app.auto_training import AutoTrainingService
+
+    AUTO_TRAINER = AutoTrainingService(reload_live_models)
 
 
 def get_db():
@@ -262,7 +277,9 @@ def analyse_url(value: str) -> UrlAnalysisResponse:
         signals.append("Excessive query parameters detected")
 
     score = min(score, 97)
-    score, model_source, model_version = blend_with_model(score, URL_MODEL, pd.DataFrame([url_features(normalised)]))
+    model_features = url_features(normalised)
+    model_values: Any = pd.DataFrame([model_features]) if pd is not None else [list(model_features.values())]
+    score, model_source, model_version = blend_with_model(score, URL_MODEL, model_values)
     return UrlAnalysisResponse(
         analysisId=str(uuid.uuid4()),
         riskScore=score,
@@ -309,12 +326,14 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def start_auto_training() -> None:
-    await AUTO_TRAINER.start()
+    if AUTO_TRAINER is not None:
+        await AUTO_TRAINER.start()
 
 
 @app.on_event("shutdown")
 async def stop_auto_training() -> None:
-    await AUTO_TRAINER.stop()
+    if AUTO_TRAINER is not None:
+        await AUTO_TRAINER.stop()
 
 
 @app.get("/api/v1/health")
@@ -325,7 +344,7 @@ def health_check() -> dict[str, str]:
 @app.get("/api/v1/training/status")
 def training_status() -> dict[str, Any]:
     """Read-only status of the automatic, quality-gated training worker."""
-    return AUTO_TRAINER.status
+    return AUTO_TRAINER.status if AUTO_TRAINER is not None else SERVERLESS_TRAINING_STATUS
 
 
 @app.get("/api/v1/categories")

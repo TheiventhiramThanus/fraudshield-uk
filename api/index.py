@@ -25,5 +25,6 @@ if str(BACKEND_DIRECTORY) not in sys.path:
 temporary_database = Path(tempfile.gettempdir()) / "fraudshield.db"
 os.environ.setdefault("DATABASE_URL", f"sqlite:///{temporary_database.as_posix()}")
 os.environ.setdefault("AUTO_TRAINING_ENABLED", "false")
+os.environ.setdefault("FRAUDSHIELD_SERVERLESS", "true")
 
 from app.main import app  # noqa: E402
