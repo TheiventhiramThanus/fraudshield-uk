@@ -126,3 +126,22 @@ trusted account, use the Firebase Console with project-owner access to change
 that account's `profiles/{uid}.role` value to `admin`. Do not loosen the
 Firestore rules or allow this change from the browser; those rules prevent a
 user from assigning themselves the admin role.
+
+## Vercel frontend + Cloud Run API deployment
+
+Vercel can host the React frontend. The FastAPI API and automatic ML training
+worker must remain on Cloud Run: Vercel serverless functions have an ephemeral
+filesystem and are not a reliable scheduler or model-artifact store.
+
+1. In Vercel, import `TheiventhiramThanus/fraudshield-uk`. It detects the Vite
+   project using `vercel.json`.
+2. Set the framework environment variables from `.env.example`, using the same
+   Firebase web-app configuration as local development.
+3. Set `VITE_API_URL` to the deployed Cloud Run API address followed by
+   `/api/v1`, for example `https://fraudshield-api-xxxxx.europe-west2.run.app/api/v1`.
+4. In Cloud Run, set `ALLOWED_ORIGINS` to the Vercel production URL, then
+   redeploy the frontend. Add any preview URLs only if you deliberately want
+   preview builds to call the API.
+
+Do not add any Firebase Admin service-account key or database password to
+Vercel. Those belong only in Cloud Run secrets.
