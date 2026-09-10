@@ -7,7 +7,6 @@ const navLinks = [
   { label: "URL Checker", href: "/url-checker" },
   { label: "Report a Scam", href: "/report" },
   { label: "Dashboard", href: "/dashboard" },
-  { label: "About", href: "/about" },
 ];
 
 export default function Navbar() {

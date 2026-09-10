@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+*.db
+models/
+data/auto_approved_training_samples.csv

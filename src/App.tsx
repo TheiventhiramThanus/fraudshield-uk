@@ -6,7 +6,6 @@ import AnalysePage from "./pages/AnalysePage";
 import URLCheckerPage from "./pages/URLCheckerPage";
 import DashboardPage from "./pages/DashboardPage";
 import ModelPerformancePage from "./pages/ModelPerformancePage";
-import AboutPage from "./pages/AboutPage";
 import ReportPage from "./pages/ReportPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -34,7 +33,6 @@ export default function App() {
         <Route path="/url-checker" element={<Layout><URLCheckerPage /></Layout>} />
         <Route path="/dashboard" element={<Layout><DashboardPage /></Layout>} />
         <Route path="/model-performance" element={<Layout><ModelPerformancePage /></Layout>} />
-        <Route path="/about" element={<Layout><AboutPage /></Layout>} />
         <Route path="/report" element={<ProtectedRoute><Layout><ReportPage /></Layout></ProtectedRoute>} />
         <Route path="/history" element={<ProtectedRoute><Layout><HistoryPage /></Layout></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute roles={["admin"]}><Layout><AdminPage /></Layout></ProtectedRoute>} />

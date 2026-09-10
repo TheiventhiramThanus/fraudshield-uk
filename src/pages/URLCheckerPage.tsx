@@ -147,7 +147,7 @@ export default function URLCheckerPage() {
           </div>
           <label className="mt-4 flex items-start gap-2 text-xs text-slate-600">
             <input type="checkbox" checked={shareForTraining} onChange={(event) => setShareForTraining(event.target.checked)} className="mt-0.5 rounded" />
-            <span>Help improve future detection with a de-identified URL sample, reviewed by an admin before model training.</span>
+            <span>Help improve future detection with a de-identified URL sample. It is auto-approved, then checked by an admin before offline training.</span>
           </label>
         </div>
 

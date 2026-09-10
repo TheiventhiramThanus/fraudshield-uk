@@ -46,7 +46,6 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               {[
                 ["Model Performance", "/model-performance"],
-                ["About", "/about"],
                 ["Sign In", "/login"],
                 ["Register", "/register"],
               ].map(([label, href]) => (

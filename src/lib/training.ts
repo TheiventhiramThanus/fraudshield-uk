@@ -40,15 +40,19 @@ export async function submitTrainingCandidate(input: {
   const sanitizedInput = input.kind === "message"
     ? redactMessageForTraining(input.value)
     : redactUrlForTraining(input.value);
+  const suggestedLabel = input.riskScore > 30 ? "potentially_suspicious" : "lower_risk";
 
   return addDoc(collection(db, "training_candidates"), {
     userId: input.userId,
     kind: input.kind,
     sanitizedInput,
-    suggestedLabel: input.riskScore > 30 ? "potentially_suspicious" : "lower_risk",
+    suggestedLabel,
+    reviewedLabel: suggestedLabel,
     riskScore: input.riskScore,
     category: input.category || "unknown",
-    reviewStatus: "pending",
+    reviewStatus: "approved",
+    autoApproved: true,
+    reviewedBy: "automatic-risk-baseline",
     createdAt: serverTimestamp(),
   });
 }

@@ -4,6 +4,7 @@ build/
 .cache/
 .pnpm-store/
 .env*
+!backend/.env.example
 .vite/
 vite.config.*.timestamp-*
 *.tsbuildinfo
@@ -16,6 +17,9 @@ blob-report/
 backend/.venv/
 *.db
 backend/models/*.joblib
+backend/models/candidates/
+backend/data/auto_approved_training_samples.csv
+backend/*service-account*.json
 backend/__pycache__/
 backend/app/__pycache__/
 backend/tests/__pycache__/

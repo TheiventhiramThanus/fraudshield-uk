@@ -20,7 +20,9 @@ from sqlalchemy import JSON, Boolean, DateTime, Integer, String, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 import pandas as pd
 
+from app.auto_training import AutoTrainingService
 from app.ml import MESSAGE_MODEL_PATH, URL_MODEL_PATH, load_model, suspicious_probability, url_features
+from app.model_store import restore_live_models
 
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./fraudshield.db")
@@ -49,8 +51,27 @@ connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite")
 engine = create_engine(DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 Base.metadata.create_all(bind=engine)
+try:
+    restore_live_models()
+except Exception:
+    # Rules baseline remains available before the first model promotion or when
+    # Cloud Storage is not configured for local development.
+    pass
 MESSAGE_MODEL = load_model(MESSAGE_MODEL_PATH)
 URL_MODEL = load_model(URL_MODEL_PATH)
+
+
+def reload_live_models() -> None:
+    global MESSAGE_MODEL, URL_MODEL
+    try:
+        restore_live_models()
+    except Exception:
+        pass
+    MESSAGE_MODEL = load_model(MESSAGE_MODEL_PATH)
+    URL_MODEL = load_model(URL_MODEL_PATH)
+
+
+AUTO_TRAINER = AutoTrainingService(reload_live_models)
 
 
 def get_db():
@@ -286,9 +307,25 @@ app.add_middleware(
 )
 
 
+@app.on_event("startup")
+async def start_auto_training() -> None:
+    await AUTO_TRAINER.start()
+
+
+@app.on_event("shutdown")
+async def stop_auto_training() -> None:
+    await AUTO_TRAINER.stop()
+
+
 @app.get("/api/v1/health")
 def health_check() -> dict[str, str]:
     return {"status": "ok", "service": "fraudshield-api"}
+
+
+@app.get("/api/v1/training/status")
+def training_status() -> dict[str, Any]:
+    """Read-only status of the automatic, quality-gated training worker."""
+    return AUTO_TRAINER.status
 
 
 @app.get("/api/v1/categories")

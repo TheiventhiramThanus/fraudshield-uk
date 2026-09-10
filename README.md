@@ -90,6 +90,37 @@ the held-out F1 reaches 0.75 (or the supplied `--minimum-f1`). Restart the API
 after a successfully activated run. Do not use demo, unreviewed, insufficient,
 or weak data in a production decision flow.
 
+## Automatic training
+
+The API includes an automatic Firestore training worker. User-consented samples
+are cleaned and auto-approved in the web app. The worker checks Firestore every
+five minutes, retrains only after the approved dataset changes, and activates a
+candidate only when it has at least 100 samples of each applicable type, both
+labels, and a held-out F1 of at least 0.75. A weak model is retained only as a
+rejected training attempt; it never replaces the live model.
+
+Create a Firebase service-account JSON key in Firebase Console, keep it outside
+the repository, and set `FIREBASE_SERVICE_ACCOUNT_PATH` plus the `AUTO_TRAINING_*`
+variables shown in `backend/.env.example` before starting the API. Check
+`GET /api/v1/training/status` to see its configuration, sample counts, and last
+quality-gate result.
+
+## Firebase Hosting + Cloud Run deployment
+
+The production frontend is hosted by Firebase Hosting. Its `/api/**` rewrite
+proxies API requests to the `fraudshield-api` Cloud Run service in
+`europe-west2`, so production builds use `/api/v1` without exposing a separate
+API URL in browser configuration.
+
+Deploy `backend/` as the `fraudshield-api` Cloud Run service using its Dockerfile.
+Set `AUTO_TRAINING_ENABLED=false` on that API service, attach a Google service
+account that can read Firestore and read/write its Cloud Storage bucket, and set
+`MODEL_STORAGE_BUCKET`. Deploy the same image as a Cloud Run Job with the command
+`python -m app.training_job`, `AUTO_TRAINING_ENABLED=true`, and a schedule of
+every 15 minutes or longer. The Job only promotes a model that reaches the
+configured held-out F1 threshold; Cloud Storage makes promoted models available
+to fresh API instances.
+
 New accounts are deliberately created with the `user` role. To promote a
 trusted account, use the Firebase Console with project-owner access to change
 that account's `profiles/{uid}.role` value to `admin`. Do not loosen the

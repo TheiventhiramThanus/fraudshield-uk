@@ -76,12 +76,11 @@ export const confusionMatrix = {
 };
 
 export const publicStats = {
-  totalReports: 94230,
-  estimatedLosses: 47.2,
-  avgLossPerVictim: 1840,
-  reportedThisMonth: 9870,
-  dataSource: "Action Fraud UK (2023–2024)",
-  sourceUrl: "https://www.actionfraud.police.uk/statistics",
-  datasetDate: "2024-03-31",
-  lastUpdated: "2024-09-01",
+  totalReports: 4_500_000,
+  fraudVictims: 3_800_000,
+  bankAccountFraud: 2_800_000,
+  dataSource: "Office for National Statistics — Crime Survey for England and Wales",
+  sourceUrl: "https://www.ons.gov.uk/peoplepopulationandcommunity/crimeandjustice/bulletins/crimeinenglandandwales/latest",
+  datasetDate: "Year ending March 2026",
+  lastUpdated: "2026-07-23",
 };

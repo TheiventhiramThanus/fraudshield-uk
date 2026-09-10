@@ -42,7 +42,10 @@ service cloud.firestore {
 
     match /training_candidates/{candidateId} {
       allow create: if signedIn() && request.resource.data.userId == request.auth.uid
-        && request.resource.data.reviewStatus == 'pending';
+        && (request.resource.data.reviewStatus == 'pending'
+          || (request.resource.data.reviewStatus == 'approved'
+            && request.resource.data.autoApproved == true
+            && request.resource.data.reviewedLabel == request.resource.data.suggestedLabel));
       allow read: if (signedIn() && resource.data.userId == request.auth.uid) || isAdmin();
       allow update: if isAdmin();
       allow delete: if false;

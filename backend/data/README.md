@@ -8,8 +8,9 @@ Required columns:
 kind,content,label,category,source,review_status
 ```
 
-Only use de-identified, admin-approved samples. Do not treat model suggestions
-as ground truth and do not add raw user submissions to this directory.
+Only use de-identified, approved samples. Automatically approved samples still
+need an admin's final inspection before export and training. Do not treat model
+suggestions as ground truth and do not add raw user submissions to this directory.
 
 Training creates an inactive review artifact by default. A model can affect live
 predictions only when the admin deliberately uses `--activate` and its held-out

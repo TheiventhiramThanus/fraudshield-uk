@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("FraudShield public workflow", () => {
-  for (const route of ["/", "/analyse", "/url-checker", "/dashboard", "/model-performance", "/about"]) {
+  for (const route of ["/", "/analyse", "/url-checker", "/dashboard", "/model-performance"]) {
     test(`public route ${route} does not render a 404 page`, async ({ page }) => {
       await page.goto(route);
       await expect(page.getByText("Page not found", { exact: true })).toHaveCount(0);

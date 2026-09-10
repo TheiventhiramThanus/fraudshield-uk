@@ -80,16 +80,16 @@ export default function DashboardPage() {
         <div className="space-y-8 animate-fade-in">
         {/* Summary stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard label="Total Reports (2023–24)" value={publicStats.totalReports.toLocaleString()} note={publicStats.dataSource} />
-          <StatCard label="Estimated Financial Losses" value={`£${publicStats.estimatedLosses}M`} note="Reported to Action Fraud" accent="#ef4444" />
-          <StatCard label="Avg Loss Per Victim" value={`£${publicStats.avgLossPerVictim.toLocaleString()}`} note="UK average" />
-          <StatCard label="Reports This Month" value={publicStats.reportedThisMonth.toLocaleString()} note="Estimated" accent="#1d4ed8" />
+          <StatCard label="Estimated Fraud Incidents" value="4.5M" note="Year ending March 2026" />
+          <StatCard label="Fraud Victims" value="3.8M" note="Year ending March 2026" accent="#ef4444" />
+          <StatCard label="Bank/Card Account Fraud" value="2.8M" note="Year ending March 2026" />
+          <StatCard label="Official Release" value="23 Jul 2026" note="ONS · England and Wales" accent="#1d4ed8" />
         </div>
 
         {/* Trend chart */}
         <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-          <h2 className="font-semibold text-[#0d1b3e] mb-1" style={{ fontFamily: "DM Sans, sans-serif" }}>Monthly Report Trends (2024)</h2>
-          <p className="text-xs text-slate-400 mb-5">Number of fraud reports by month</p>
+          <h2 className="font-semibold text-[#0d1b3e] mb-1" style={{ fontFamily: "DM Sans, sans-serif" }}>Illustrative Monthly Trend</h2>
+          <p className="text-xs text-slate-400 mb-5">Demo visual only — official current data is published as annual estimates.</p>
           <ResponsiveContainer width="100%" height={260}>
             <AreaChart data={fraudTrendData}>
               <defs>
@@ -113,8 +113,8 @@ export default function DashboardPage() {
         {/* Category + Region */}
         <div className="grid lg:grid-cols-2 gap-6">
           <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-            <h2 className="font-semibold text-[#0d1b3e] mb-1" style={{ fontFamily: "DM Sans, sans-serif" }}>Fraud by Category</h2>
-            <p className="text-xs text-slate-400 mb-4">Percentage share of reported scam types</p>
+            <h2 className="font-semibold text-[#0d1b3e] mb-1" style={{ fontFamily: "DM Sans, sans-serif" }}>Illustrative Scam Categories</h2>
+            <p className="text-xs text-slate-400 mb-4">Platform taxonomy visual, not an official current category breakdown.</p>
             <ResponsiveContainer width="100%" height={240}>
               <PieChart>
                 <Pie data={categoryData} cx="50%" cy="50%" innerRadius={60} outerRadius={95} dataKey="value" nameKey="name">
@@ -129,8 +129,8 @@ export default function DashboardPage() {
           </div>
 
           <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-            <h2 className="font-semibold text-[#0d1b3e] mb-1" style={{ fontFamily: "DM Sans, sans-serif" }}>Reports by Region</h2>
-            <p className="text-xs text-slate-400 mb-4">Fraud reports by UK region</p>
+            <h2 className="font-semibold text-[#0d1b3e] mb-1" style={{ fontFamily: "DM Sans, sans-serif" }}>Illustrative Regional View</h2>
+            <p className="text-xs text-slate-400 mb-4">Demo visual; not an official current regional dataset.</p>
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={regionData.slice(0, 8)} layout="vertical" margin={{ left: 10, right: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
@@ -145,8 +145,8 @@ export default function DashboardPage() {
 
         {/* Financial losses chart */}
         <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-          <h2 className="font-semibold text-[#0d1b3e] mb-1" style={{ fontFamily: "DM Sans, sans-serif" }}>Estimated Financial Losses (£M)</h2>
-          <p className="text-xs text-slate-400 mb-5">Monthly estimated losses reported to Action Fraud UK</p>
+          <h2 className="font-semibold text-[#0d1b3e] mb-1" style={{ fontFamily: "DM Sans, sans-serif" }}>Illustrative Loss Trend (£M)</h2>
+          <p className="text-xs text-slate-400 mb-5">Demo visual; current ONS headline data does not provide this monthly series.</p>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={fraudTrendData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -166,7 +166,7 @@ export default function DashboardPage() {
             <a href={publicStats.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
               {publicStats.dataSource}
             </a>. Dataset date: {publicStats.datasetDate}. Last platform update: {publicStats.lastUpdated}.
-            Financial loss figures are estimates based on reported data. Actual fraud losses may be significantly higher due to under-reporting.
+            The four headline cards use the latest official ONS annual estimate. The charts are illustrative UI data and are clearly labelled so they are not confused with current official statistics.
           </p>
         </div>
         </div>

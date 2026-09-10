@@ -95,8 +95,8 @@ export default function HomePage() {
           <div className="hidden lg:block">
             <div className="bg-white/5 border border-white/10 rounded-xl p-6 backdrop-blur-sm">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-white/60 text-sm">UK Fraud Reports — 2024</span>
-                <span className="text-xs text-green-400 bg-green-400/10 px-2 py-0.5 rounded-full">Live</span>
+                <span className="text-white/60 text-sm">UK Fraud Estimate — YE March 2026</span>
+                <span className="text-xs text-green-400 bg-green-400/10 px-2 py-0.5 rounded-full">Official release</span>
               </div>
               <ResponsiveContainer width="100%" height={140}>
                 <AreaChart data={fraudTrendData}>
@@ -114,8 +114,8 @@ export default function HomePage() {
                 </AreaChart>
               </ResponsiveContainer>
               <div className="grid grid-cols-2 gap-3 mt-4">
-                <StatCard label="Reports this year" value={publicStats.totalReports.toLocaleString()} />
-                <StatCard label="Estimated losses" value={`£${publicStats.estimatedLosses}M`} />
+                <StatCard label="Estimated fraud incidents" value="4.5M" />
+                <StatCard label="Fraud victims" value="3.8M" />
               </div>
             </div>
           </div>
@@ -126,10 +126,10 @@ export default function HomePage() {
       <section className="bg-[#0d1b3e] border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { label: "Fraud reports", value: "94,230", note: "UK 2023–24" },
-            { label: "Avg loss per victim", value: "£1,840", note: "Action Fraud UK" },
-            { label: "Reports this month", value: "9,870", note: "Estimated" },
-            { label: "Scam categories", value: "13+", note: "Tracked" },
+            { label: "Estimated fraud incidents", value: "4.5M", note: "YE March 2026 · ONS" },
+            { label: "Fraud victims", value: "3.8M", note: "YE March 2026 · ONS" },
+            { label: "Bank/card account fraud", value: "2.8M", note: "YE March 2026 · ONS" },
+            { label: "Data release", value: "2026", note: "23 July · ONS" },
           ].map((s) => (
             <div key={s.label} className="text-center">
               <div className="text-2xl font-bold text-white" style={{ fontFamily: "DM Sans, sans-serif" }}>{s.value}</div>
@@ -249,7 +249,7 @@ export default function HomePage() {
                 UK Fraud Intelligence Dashboard
               </h2>
               <p className="text-white/50 mt-2 text-sm max-w-lg">
-                Aggregated data from Action Fraud UK and public datasets. All statistics are sourced and dated.
+                Latest official annual estimate from the Office for National Statistics. Charts below are illustrative platform views, not live monthly feeds.
               </p>
             </div>
             <Link to="/dashboard" className="shrink-0 border border-white/20 text-white/70 hover:text-white hover:border-white/40 px-5 py-2.5 rounded text-sm transition-colors">
@@ -259,7 +259,7 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-6">
             <div className="md:col-span-2 bg-white/5 border border-white/10 rounded-xl p-6">
-              <div className="text-white/60 text-sm mb-4">Reports by month (2024)</div>
+              <div className="text-white/60 text-sm mb-4">Illustrative monthly trend — not an official 2026 series</div>
               <ResponsiveContainer width="100%" height={200}>
                 <AreaChart data={fraudTrendData}>
                   <defs>
